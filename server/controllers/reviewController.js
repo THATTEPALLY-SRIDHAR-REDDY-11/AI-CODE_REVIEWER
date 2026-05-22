@@ -28,7 +28,7 @@ export async function createReview(req, res) {
       createdAt: saved.createdAt,
     });
   } catch (err) {
-    console.error("createReview:", err.message);
+    console.error("createReview error:", err?.stack || err?.message || err);
     res.status(500).json({
       error: err.message || "Failed to generate review",
     });

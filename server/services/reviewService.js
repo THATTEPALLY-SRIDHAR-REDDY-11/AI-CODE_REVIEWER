@@ -51,12 +51,17 @@ function parseReviewJson(raw) {
 }
 
 async function callGroq(prompt) {
-  const response = await groq.chat.completions.create({
-    messages: [{ role: "user", content: prompt }],
-    model: "llama-3.3-70b-versatile",
-    temperature: 0.2,
-  });
-  return response.choices[0]?.message?.content ?? "";
+  try {
+    const response = await groq.chat.completions.create({
+      messages: [{ role: "user", content: prompt }],
+      model: "llama-3.3-70b-versatile",
+      temperature: 0.2,
+    });
+    return response.choices[0]?.message?.content ?? "";
+  } catch (e) {
+    console.error("callGroq error:", e?.stack || e?.message || e);
+    throw new Error(`LLM connection error: ${e?.message || e}`);
+  }
 }
 
 export const generateReview = traceable(
